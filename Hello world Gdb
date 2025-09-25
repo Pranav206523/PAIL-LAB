@@ -1,0 +1,34 @@
+global _start
+
+section .data
+    msg db "Hello, World!", 10    ; message + newline
+    len equ $ - msg               ; message length
+
+section .text
+_start:
+    ; sys_write(stdout=1, msg, len)
+    mov eax, 4       ; syscall number for sys_write
+    mov ebx, 1       ; file descriptor (stdout)
+    mov ecx, msg     ; pointer to message
+    mov edx, len     ; message length
+    int 0x80         ; make syscall
+
+    ; sys_exit(0)
+    mov eax, 1       ; syscall number for sys_exit
+    xor ebx, ebx     ; exit code = 0
+    int 0x80
+
+nasm -f elf32 hello.asm -o hello.o
+ld -m elf_i386 hello.o -o hello
+./hello
+
+gdb ./hello
+
+(gdb) break _start      ; set breakpoint at entry
+(gdb) run               ; run program until breakpoint
+(gdb) stepi             ; step through instructions one at a time
+(gdb) info registers    ; check register values
+(gdb) x/s $ecx          ; see the string being printed
+(gdb) continue          ; continue execution
+(gdb) quit              ; exit gdb
+
