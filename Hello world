@@ -1,0 +1,19 @@
+global _start
+
+section .data
+    hello db "Hello World", 10   ; The string with newline
+    length equ $ - hello         ; Length of the string
+
+section .text
+_start:
+    ; sys_write(stdout=1, hello, length)
+    mov eax, 4       ; syscall number for sys_write
+    mov ebx, 1       ; file descriptor (stdout)
+    mov ecx, hello   ; pointer to string
+    mov edx, length  ; length of string
+    int 0x80         ; make kernel call
+
+    ; sys_exit(0)
+    xor ebx, ebx     ; exit status = 0
+    mov eax, 1       ; syscall number for sys_exit
+    int 0x80         ; make kernel call
