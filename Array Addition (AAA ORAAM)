@@ -1,0 +1,45 @@
+section .data
+    ; No data needed for this example
+
+section .text
+    global _start
+
+_start:
+    mov ah, 0          ; Clear AH register
+    mov al, '5'        ; AL = 35h (ASCII '5')
+    add al, '4'        ; AL = 35h + 34h = 69h (which isn't a BCD number)
+    
+    aaa                ; After AAA, AX will become 0009h. 
+                       ; The result is correct (5+4=9), and it's adjusted.
+
+    ; Let's try an addition with a carry
+    mov ah, 0
+    mov al, '8'        ; AL = 38h
+    add al, '4'        ; AL = 38h + 34h = 6Ch
+    
+    aaa                ; After AAA, AX will become 0102h. This represents BCD 12.
+
+    ; Exit the program
+    mov eax, 1
+    xor ebx, ebx
+    int 0x80
+
+.section .data
+    ; No data needed for this example
+
+section .text
+    global _start
+
+_start:
+    mov al, 5          ; AL = 05h (unpacked BCD 5)
+    mov bl, 7          ; BL = 07h (unpacked BCD 7)
+    
+    mul bl             ; AL * BL -> AX. AX becomes 0023h (35 decimal)
+
+    aam                ; After AAM, AH = 03h and AL = 05h. 
+                       ; This correctly represents BCD 35.
+
+    ; Exit the program
+    mov eax, 1
+    xor ebx, ebx
+    int 0x80
