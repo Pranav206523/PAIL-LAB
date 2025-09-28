@@ -13,9 +13,9 @@ section .data
     newline db 10
 
 section .bss
-    val1 resb 2
-    val2 resb 2
-    result resb 2
+    val1 resb 2       ; buffer for input 1
+    val2 resb 2       ; buffer for input 2
+    result resb 2     ; buffer for result (up to 2 digits)
 
 section .text
 _start:
@@ -53,11 +53,12 @@ _start:
     mov bl, [val2]
     sub bl, '0'
 
-    ; division
-    xor ah, ah        ; clear AH for AX = AL
-    div bl            ; AX / BL => AL = quotient, AH = remainder
+    ; division (quotient only)
+    xor ah, ah        ; clear AH so AX = AL
+    div bl            ; AL = quotient, AH = remainder
 
-    ; convert quotient to ASCII
+    ; now AL = quotient
+    ; convert AL to ASCII
     add al, '0'
     mov [result], al
 
@@ -68,7 +69,7 @@ _start:
     mov edx, msg3len
     int 0x80
 
-    ; print result
+    ; print quotient
     mov eax, 4
     mov ebx, 1
     mov ecx, result
@@ -86,3 +87,5 @@ _start:
     mov eax, 1
     xor ebx, ebx
     int 0x80
+
+   
